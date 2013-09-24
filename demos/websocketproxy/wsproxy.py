@@ -58,11 +58,9 @@ class WebSocketApp(object):
     '''Funnel messages coming from an inproc zmq socket to the websocket'''
 
     def __init__(self, context):
-        print "11"
         self.context = context
 
     def __call__(self, environ, start_response):
-        print "12"
         ws = environ['wsgi.websocket']
         sock = self.context.socket(zmq.SUB)
         sock.setsockopt(zmq.SUBSCRIBE, "")
