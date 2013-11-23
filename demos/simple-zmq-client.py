@@ -7,7 +7,7 @@ from pprint import pprint
 
 context = zmq.Context()
 sock = context.socket(zmq.SUB)
-sock.setsockopt(zmq.SUBSCRIBE, '')
+sock.setsockopt(zmq.SUBSCRIBE, 'eva:host:host')
 
 # This needs discovery!
 if len(sys.argv) > 1:
@@ -20,8 +20,9 @@ else:
 
 try:
     while True:
-        message = sock.recv()
-        pprint(msgpack.loads(message))
+        messages = sock.recv_multipart()
+        print "*** Key: %s" % messages[0]
+        pprint(msgpack.loads(messages[1]))
 except KeyboardInterrupt:
     pass
 finally:
