@@ -7,7 +7,7 @@ from pprint import pprint
 
 context = zmq.Context()
 sock = context.socket(zmq.SUB)
-sock.setsockopt(zmq.SUBSCRIBE, 'eva:host:host')
+sock.setsockopt(zmq.SUBSCRIBE, '')
 
 # This needs discovery!
 if len(sys.argv) > 1:
