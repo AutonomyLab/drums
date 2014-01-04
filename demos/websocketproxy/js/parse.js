@@ -4,7 +4,7 @@ $(function() {
     ws.onmessage = function(evt) {
         var d = $.parseJSON(evt.data);
         var item_key = new String(d['key']);
-        var item_key_id = item_key.replace(/\./g, "");
+        var item_key_id = item_key.replace(/\./g, "").replace(/\:/g, "");
         if (items.indexOf(item_key) == -1) {
             items.push(item_key)
             $('#placeholder').append("<div id=\"" + item_key_id + "\"></div>")
