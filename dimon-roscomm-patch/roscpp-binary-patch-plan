@@ -105,3 +105,7 @@ sudo ./patch.sh install-340f0c90 hydro --backup
 -- Method 1: sudo ./patch.sh backup/15012014/opt/ros/hydro hydro
 -- Method 2: sudo aptitude reinstall ros-hydro-roscpp ros-hydro-rospy
 
+### roscpp and roscpp_core correlated stable tags
+
+1.9.50 0.3.16
+1.9.53 0.3.17
