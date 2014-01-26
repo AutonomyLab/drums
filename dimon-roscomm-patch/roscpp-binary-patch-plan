@@ -1,7 +1,6 @@
 Plan for updating roscpp binaries:
 
-Data: Jan 14th 2014
-Current roscpp stable version:
+Check Current roscpp stable version:
 
 $ sudo aptitude show ros-hydro-roscpp | grep Version
 Version: 1.9.50-0precise-20131015-1959-+0000
@@ -15,88 +14,75 @@ Version: 1.9.50-0precise-20131015-1940-+0000
 $ sudo aptitude show ros-groovy-rospy | grep Version
 Version: 1.9.50-0precise-20131015-2028-+0000
 
-[Headsup: 1.9.52 is on its way to release]
-
 My modifications to roscpp and rospy are in `transport_info` branch of this repo: https://github.com/mani-monaj/ros_comm/tree/transport_info
 
 The changes on top of 1.9.50 stable tag are from 2885a199145bc17b6c38a0b99e9efc73a28eedc8 [tag 1.9.50] to 340f0c90155e1dec4aad23c02bb58d5af135b42f . Therefore commit 340f0c90 is minimal changes on top of current version of roscpp.
 
-The plan is to first make tag 1.9.50 and then 340f0c90 and make a diff. To be sure, it is better to diff local 1.9.50 binaries with ros hyrdo and groovy binaries.
+git diff 1.9.50 340f0c9 > transport_info.patch
+cp transport_info.patch ~/Dev/dimon/dimon-roscomm-patch/transport_info.patch
 
-1) cd src/roscpp folder, git checkout 1.9.50, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-1.9.50
-2) cd src/roscpp folder, git checkout 340f0c90, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-340f0c90
+Let's create a branch from the latest stable tag and patch the sourec files:
 
-$ md5sum /opt/ros/hydro/lib/libroscpp.so 
-b8ea2fde8e470b2e18b716c6bd6efafe  /opt/ros/hydro/lib/libroscpp.so
+git checkout -b 1.9.53-ti 1.9.53
+git apply ~/Dev/dimon/dimon-roscomm-patch/transport_info.patch
+git commit -am "transport_info patch to 1.9.53"
+git push origin 1.9.53-ti
 
-$ md5sum install-1.9.50/lib/libroscpp.so 
-b24ac955de622c45915c97375f58e296  install-1.9.50/lib/libroscpp.so
 
-$ md5sum install-340f0c90/lib/libroscpp.so 
-a92e11986c1ffc2d27b93df6865294b8  install-340f0c90/lib/libroscpp.so
+The plan is to first make tag 1.9.53 and then 1.9.53-ti and make a diff. To be sure, it is better to diff local 1.9.53 binaries with ros hyrdo and groovy binaries.
+
+IMPORTANT NOTE: roscpp depends on all ROS packages from roscpp_core. So in the catkin_ws we also need the latest stable roscpp_core files:
+
+$ cd ~/catkin_ws/src
+$ git clone https://github.com/ros/roscpp_core
+$ checkout 0.3.17 <Find this either using aptitude or github>
+
+1) cd src/roscpp folder, git checkout 1.9.53, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-1.9.53
+2) cd src/roscpp folder, git checkout 1.9.53-ti, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-1.9.53-ti
 
 This looks like a reasonabe diff:
 
-$ diff -rq install-1.9.50 install-340f0c90 | grep -vF -e "ardrone" -e "/msg/" -e "/srv/" 
-$ diff -rq install-1.9.50 install-340f0c90 | grep -vF -e  "ardrone" -e "/msg/" -e "/srv/" | cut -d " " -f4 > dimon-roscomm-patch/list.txt
+$ diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/" 
 
-Files install-1.9.50/include/ros/intraprocess_publisher_link.h and install-340f0c90/include/ros/intraprocess_publisher_link.h differ
-Files install-1.9.50/include/ros/intraprocess_subscriber_link.h and install-340f0c90/include/ros/intraprocess_subscriber_link.h differ
-Files install-1.9.50/include/ros/publisher_link.h and install-340f0c90/include/ros/publisher_link.h differ
-Files install-1.9.50/include/ros/subscriber_link.h and install-340f0c90/include/ros/subscriber_link.h differ
-Files install-1.9.50/include/ros/transport/transport_tcp.h and install-340f0c90/include/ros/transport/transport_tcp.h differ
-Files install-1.9.50/include/ros/transport/transport_udp.h and install-340f0c90/include/ros/transport/transport_udp.h differ
-Files install-1.9.50/include/ros/transport_publisher_link.h and install-340f0c90/include/ros/transport_publisher_link.h differ
-Files install-1.9.50/include/ros/transport_subscriber_link.h and install-340f0c90/include/ros/transport_subscriber_link.h differ
-Files install-1.9.50/lib/libroscpp.so and install-340f0c90/lib/libroscpp.so differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/tcpros_base.py and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_base.py differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/tcpros_base.pyc and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_base.pyc differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.py and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.py differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.pyc and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.pyc differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/transport.py and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/transport.py differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/impl/transport.pyc and install-340f0c90/lib/python2.7/dist-packages/rospy/impl/transport.pyc differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/topics.py and install-340f0c90/lib/python2.7/dist-packages/rospy/topics.py differ
-Files install-1.9.50/lib/python2.7/dist-packages/rospy/topics.pyc and install-340f0c90/lib/python2.7/dist-packages/rospy/topics.pyc differ
 
 Let's copy the files somewhere safe first:
 
 mkdir dimon-roscomm-patch
-diff -rq install-1.9.50 install-340f0c90 | grep -vF -e  "ardrone" -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ./dimon-roscomm-patch/
+diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e  "ardrone" -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ~/Dev/dimon/dimon-roscomm-patch/
 
 All done: 
 
-$ cd dimon-roscomm-patch & ls
+$ cd ~/Dev/dimon/dimon-roscomm-patch/install-1.9.53-ti && find .
 
 find .
 .
-./install-340f0c90
-./install-340f0c90/include
-./install-340f0c90/include/ros
-./install-340f0c90/include/ros/intraprocess_subscriber_link.h
-./install-340f0c90/include/ros/publisher_link.h
-./install-340f0c90/include/ros/subscriber_link.h
-./install-340f0c90/include/ros/intraprocess_publisher_link.h
-./install-340f0c90/include/ros/transport
-./install-340f0c90/include/ros/transport/transport_udp.h
-./install-340f0c90/include/ros/transport/transport_tcp.h
-./install-340f0c90/include/ros/transport_subscriber_link.h
-./install-340f0c90/include/ros/transport_publisher_link.h
-./install-340f0c90/lib
-./install-340f0c90/lib/libroscpp.so
-./install-340f0c90/lib/python2.7
-./install-340f0c90/lib/python2.7/dist-packages
-./install-340f0c90/lib/python2.7/dist-packages/rospy
-./install-340f0c90/lib/python2.7/dist-packages/rospy/topics.py
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_base.py
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.py
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_base.pyc
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/transport.py
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.pyc
-./install-340f0c90/lib/python2.7/dist-packages/rospy/impl/transport.pyc
-./install-340f0c90/lib/python2.7/dist-packages/rospy/topics.pyc
+./include
+./include/ros
+./include/ros/intraprocess_subscriber_link.h
+./include/ros/publisher_link.h
+./include/ros/subscriber_link.h
+./include/ros/intraprocess_publisher_link.h
+./include/ros/transport
+./include/ros/transport/transport_udp.h
+./include/ros/transport/transport_tcp.h
+./include/ros/transport_subscriber_link.h
+./include/ros/transport_publisher_link.h
+./lib
+./lib/libroscpp.so
+./lib/python2.7
+./lib/python2.7/dist-packages
+./lib/python2.7/dist-packages/rospy
+./lib/python2.7/dist-packages/rospy/topics.py
+./lib/python2.7/dist-packages/rospy/impl
+./lib/python2.7/dist-packages/rospy/impl/tcpros_base.py
+./lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.py
+./lib/python2.7/dist-packages/rospy/impl/tcpros_base.pyc
+./lib/python2.7/dist-packages/rospy/impl/transport.py
+./lib/python2.7/dist-packages/rospy/impl/tcpros_pubsub.pyc
+./lib/python2.7/dist-packages/rospy/impl/transport.pyc
+./lib/python2.7/dist-packages/rospy/topics.pyc
 
-I dumped the above output to list.txt file without ./install-340f0c90/ part. Then I wrote a python script to do the patch per file.
+I dumped the above output to list.txt file without the redundant parts. Then I wrote a python script to do the patch per file.
 
 - How to Manually install one file:
 
