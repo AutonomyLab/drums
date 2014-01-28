@@ -48,7 +48,7 @@ $ diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/"
 Let's copy the files somewhere safe first:
 
 mkdir dimon-roscomm-patch
-diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e  "ardrone" -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ~/Dev/dimon/dimon-roscomm-patch/
+diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ~/Dev/dimon/dimon-roscomm-patch/
 
 All done: 
 
