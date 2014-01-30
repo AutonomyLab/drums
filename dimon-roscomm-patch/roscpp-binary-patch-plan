@@ -37,8 +37,8 @@ $ cd ~/catkin_ws/src
 $ git clone https://github.com/ros/roscpp_core
 $ checkout 0.3.17 <Find this either using aptitude or github>
 
-1) cd src/roscpp folder, git checkout 1.9.53, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-1.9.53
-2) cd src/roscpp folder, git checkout 1.9.53-ti, cd ~/catkin_ws, catkin_make, catkin_make install, mv install install-1.9.53-ti
+1) cd src/roscpp folder, git checkout 1.9.53, cd ~/catkin_ws, catkin_make clean, catkin_make, catkin_make install, mv install install-1.9.53
+2) cd src/roscpp folder, git checkout 1.9.53-ti, cd ~/catkin_ws, catkin_make clean, catkin_make, catkin_make install, mv install install-1.9.53-ti
 
 This looks like a reasonabe diff:
 
@@ -109,3 +109,4 @@ sudo ./patch.sh install-340f0c90 hydro --backup
 
 1.9.50 0.3.16
 1.9.53 0.3.17
+1.9.54 0.3.17
