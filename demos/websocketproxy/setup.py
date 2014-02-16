@@ -34,5 +34,4 @@ setup(
     install_requires = ['gevent', 'pyzmq', 'gevent-websocket', 'msgpack', 'paste'],
     description = 'TODO',
     scripts = ["wsproxy.py"],
-    test_suite = 'test.test_dimond.get_suite'
 )

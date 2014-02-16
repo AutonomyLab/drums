@@ -30,7 +30,7 @@ def exec_shell_command(cmd, dry_run=False):
     return 0 if dry_run else call(cmd)
 
 def main():
-    parser = argparse.ArgumentParser(description='Dimon Temporary ROS Patch and Restore\n Sample: ./dimon-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix install-340f0c90')
+    parser = argparse.ArgumentParser(description='Drums Temporary ROS Patch and Restore\n Sample: ./drums-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix install-340f0c90')
     parser.add_argument('-i', help='Source file to copy', action="store",dest='input_file', type=str, required=True)
     parser.add_argument('-distro', help='The target ROS distro', action="store",dest='target_distro', type=str, required=True)
     parser.add_argument('--prefixe', help='The source folder to find files in', action="store",dest='prefix', type=str, required=False)

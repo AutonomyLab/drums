@@ -21,5 +21,5 @@ else
     backup=""
 fi
 
-cat list.txt | xargs -L1 -I {} ./dimon-roscomm-patch.py -i {} -distro $2 --prefix $1 $backup
+cat list.txt | xargs -L1 -I {} ./drums-roscomm-patch.py -i {} -distro $2 --prefix $1 $backup
 

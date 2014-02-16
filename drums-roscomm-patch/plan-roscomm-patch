@@ -19,12 +19,12 @@ My modifications to roscpp and rospy are in `transport_info` branch of this repo
 The changes on top of 1.9.50 stable tag are from 2885a199145bc17b6c38a0b99e9efc73a28eedc8 [tag 1.9.50] to 340f0c90155e1dec4aad23c02bb58d5af135b42f . Therefore commit 340f0c90 is minimal changes on top of current version of roscpp.
 
 git diff 1.9.50 340f0c9 > transport_info.patch
-cp transport_info.patch ~/Dev/dimon/dimon-roscomm-patch/transport_info.patch
+cp transport_info.patch ~/Dev/drums/drums-roscomm-patch/transport_info.patch
 
 Let's create a branch from the latest stable tag and patch the sourec files:
 
 git checkout -b 1.9.53-ti 1.9.53
-git apply ~/Dev/dimon/dimon-roscomm-patch/transport_info.patch
+git apply ~/Dev/drums/drums-roscomm-patch/transport_info.patch
 git commit -am "transport_info patch to 1.9.53"
 git push origin 1.9.53-ti
 
@@ -42,17 +42,17 @@ $ checkout 0.3.17 <Find this either using aptitude or github>
 
 This looks like a reasonabe diff:
 
-$ diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/" 
+$ diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/"
 
 
 Let's copy the files somewhere safe first:
 
-mkdir dimon-roscomm-patch
-diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ~/Dev/dimon/dimon-roscomm-patch/
+mkdir drums-roscomm-patch
+diff -rq install-1.9.53 install-1.9.53-ti | grep -vF -e "/msg/" -e "/srv/" | cut -d " " -f4 | xargs -L1 -I {} cp --parents {} ~/Dev/drums/drums-roscomm-patch/
 
-All done: 
+All done:
 
-$ cd ~/Dev/dimon/dimon-roscomm-patch/install-1.9.53-ti && find .
+$ cd ~/Dev/drums/drums-roscomm-patch/install-1.9.53-ti && find .
 
 find .
 .
@@ -86,13 +86,13 @@ I dumped the above output to list.txt file without the redundant parts. Then I w
 
 - How to Manually install one file:
 
-sudo ./dimon-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix install-340f0c90 --backup
+sudo ./drums-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix install-340f0c90 --backup
 
 - How to manually restore backup?
 
-sudo ./dimon-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix backup/<version>/opt/ros/hydro
+sudo ./drums-roscomm-patch.py -i include/ros/publisher_link.h -distro hydro --prefix backup/<version>/opt/ros/hydro
 
-- How to check differences: 
+- How to check differences:
 
 cat list.txt | xargs -L1 -I {} diff /opt/ros/hydro/{} install-340f0c90/{}
 
