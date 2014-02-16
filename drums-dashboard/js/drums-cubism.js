@@ -4,7 +4,7 @@ $(document).ready(function() {
       .step( 2 * 1e3 )   // 1 sec
       .size(1440);  // 1 * 960 = 4 hours
 
-    var graphite = context.graphite("http://bluemax");
+    var graphite = context.graphite("http://localhost");
     var metrics = [];
 
     var redraw = function () {
@@ -39,11 +39,11 @@ $(document).ready(function() {
     }
 
     var update_graph = function() {
-        var host_regex = /dimon\.(.*?)\.host/i;
-        var pid_regex = /dimon\.(.*?)\.pid\.(.*?)\./i;
+        var host_regex = /drums\.(.*?)\.host/i;
+        var pid_regex = /drums\.(.*?)\.pid\.(.*?)\./i;
         var socket_regex = /socket\.(.*?)\.topic\.(.*?)\.(from|to)\.(.*?)\./i;
 
-        graphite.find("dimon.*.host", function(error, results) {
+        graphite.find("drums.*.host", function(error, results) {
             for (r in results){
                 m = results[r].match(host_regex);
                 host = m[1];
@@ -51,7 +51,7 @@ $(document).ready(function() {
             }
         });
 
-        graphite.find("dimon.*.pid.*", function(error, results) {
+        graphite.find("drums.*.pid.*", function(error, results) {
             for (r in results){
                 m = results[r].match(pid_regex);
                 parent_host = m[1];
@@ -77,12 +77,12 @@ $(document).ready(function() {
             }
         });
 
-        graphite.find("dimon.*.socket.*.topic.*.*.*", function(error, results) {
+        graphite.find("drums.*.socket.*.topic.*.*.*", function(error, results) {
             for (r in results){
                 m = results[r].match(socket_regex);
 
                 metric_str = "derivative("+results[r] + "bytes)";
-                //dimon.bluemax.socket.:rosout.topic.:rosout.from.kitt:58097:.get_cpu_percent
+                //drums.bluemax.socket.:rosout.topic.:rosout.from.kitt:58097:.get_cpu_percent
                 console.log(metric_str);
                 metric = graphite.metric(metric_str);
                 metric.on("change", function (start, stop){
@@ -109,5 +109,5 @@ $(document).ready(function() {
 
     update_graph();
 
-    console.log("Dimon World!");
+    console.log("Drums World!");
 });

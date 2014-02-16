@@ -5,7 +5,7 @@
       .size(960);  // 1 * 960 = 4 hours
    
     var graphite = context.graphite("http://bluemax");
-    var cpu = graphite.metric("sum(dimon.bluemax.host.host.cpu_percent.*)")
+    var cpu = graphite.metric("sum(drums.bluemax.host.host.cpu_percent.*)")
 
       // var sigRoot = document.getElementById('sig');
       // var sigInst = sigma.init(sigRoot).drawingProperties({
@@ -24,8 +24,8 @@
       // sigInst.startForceAtlas2();
 
     var update_graph = function() {
-      var host_regex = /dimon\.(.*?)\.host/i;
-      var pid_regex = /dimon\.(.*?)\.pid\.(.*?)\./i;
+      var host_regex = /drums\.(.*?)\.host/i;
+      var pid_regex = /drums\.(.*?)\.pid\.(.*?)\./i;
       //socket.:listener_3983_1389124500051.topic.:chatter.from.bluemax:46660:.
       var socket_regex = /socket\.(.*?)\.topic\.(.*?)\.(from|to)\.(.*?)\./i;
 
@@ -41,7 +41,7 @@
 
       graph = new myGraph("#svgdiv");
       var dummy = [];
-      graphite.find("dimon.*.host", function(error, results) {
+      graphite.find("drums.*.host", function(error, results) {
         for (r in results){
           m = results[r].match(host_regex);
           host = m[1];
@@ -74,7 +74,7 @@
 
       });
 
-      graphite.find("dimon.*.pid.*", function(error, results) {
+      graphite.find("drums.*.pid.*", function(error, results) {
         for (r in results){
           //console.log(results[r].match(pid_regex)[2] + " @ " + results[r].match(pid_regex)[1]);
           m = results[r].match(pid_regex);
@@ -99,7 +99,7 @@
 
       });
 
-      graphite.find("dimon.*.socket.*.topic.*.*.*", function(error, results) {
+      graphite.find("drums.*.socket.*.topic.*.*.*", function(error, results) {
         for (r in results){
            m = results[r].match(socket_regex);
            node1 = m[1];
@@ -131,8 +131,8 @@
   //   var horizon = context.horizon().metric(graphite.metric).height(100);
   //    
   //   var metrics = [
-  //      'dimon.bluemax.pid.:dimonros.get_cpu_percent',
-  //     'dimon.bluemax.latency.bluemax.avg'
+  //      'drums.bluemax.pid.:drumsros.get_cpu_percent',
+  //     'drums.bluemax.latency.bluemax.avg'
   //   ]
   //    
   //   d3.select("#graphs").append("div")
@@ -160,7 +160,7 @@
     //     timeout: 30000 });
     // }
 
-    // poll("http://bluemax/render?target=dimon.bluemax.pid.:dimonros.get_cpu_percent&from=-1s&format=json")
+    // poll("http://bluemax/render?target=drums.bluemax.pid.:drumsros.get_cpu_percent&from=-1s&format=json")
 
 
     // function g_poller(target_url, interval) {
@@ -204,7 +204,7 @@
     // };
 
     // (function poll(){
-    //   $.ajax({ url: "http://bluemax/render?target=dimon.bluemax.pid.:dimonros.get_cpu_percent&from=-1s&format=json", success: function(data){
+    //   $.ajax({ url: "http://bluemax/render?target=drums.bluemax.pid.:drumsros.get_cpu_percent&from=-1s&format=json", success: function(data){
     //       //Update your dashboard gauge
     //        console.log(data);
     //   }, dataType: "json", complete: poll, timeout: 1000 });
@@ -215,5 +215,5 @@
 
   //var renderer = Viva.Graph.View.renderer(graph);
   //renderer.run();
-  //mani = new g_poller("http://bluemax/render?target=dimon.bluemax.pid.:dimonros.get_cpu_percent&from=-1s&format=json", 1000)
+  //mani = new g_poller("http://bluemax/render?target=drums.bluemax.pid.:drumsros.get_cpu_percent&from=-1s&format=json", 1000)
   //mani.poll()
